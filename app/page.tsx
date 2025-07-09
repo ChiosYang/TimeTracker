@@ -15,7 +15,6 @@ export default function Home() {
         <div className="flex items-center">
           <div className="text-4xl font-bold">欢迎张总莅临考察！</div>
         </div>
-       
       </main>
     </div>
   );
