@@ -57,12 +57,7 @@ export function MainNav() {
   return (
     <div className="flex items-center gap-x-4">
       <Link href="/">
-        <Image
-          src="/vercel.svg"
-          alt="Logo"
-          width={30}
-          height={30}
-        />
+        <Image src="/vercel.svg" alt="Logo" width={30} height={30} />
       </Link>
       <NavigationMenu>
         <NavigationMenuList>
@@ -119,6 +114,13 @@ export function MainNav() {
             <NavigationMenuLink asChild>
               <Link href="/docs" className={navigationMenuTriggerStyle()}>
                 Documentation
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link href="/dashboard" className={navigationMenuTriggerStyle()}>
+                Dashboard
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
