@@ -40,3 +40,24 @@ export enum PersonaStateEnum {
   LOOKING_TO_TRADE = 5,
   LOOKING_TO_PLAY = 6,
 }
+
+// KV存储相关类型
+export interface UserSteamConfig {
+  steamApiKey: string;
+  steamId: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface ConfigFormData {
+  steamApiKey: string;
+  steamId: string;
+}
+
+export interface ConfigValidationResult {
+  isValid: boolean;
+  errors: {
+    steamApiKey?: string;
+    steamId?: string;
+  };
+}

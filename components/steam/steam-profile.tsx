@@ -112,25 +112,25 @@ export function ErrorState({ error }: ErrorStateProps) {
         Could not load Steam profile data. Reason: {error}
       </p>
       <div className="bg-red-100 dark:bg-red-900/40 rounded-md p-4">
-        <p className="text-sm text-red-800 dark:text-red-200">
-          Please make sure you have configured the following environment variables in your{" "}
-          <code className="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-xs">
-            .env.local
-          </code>{" "}
-          file:
+        <p className="text-sm text-red-800 dark:text-red-200 mb-4">
+          Please configure your Steam API credentials to access your profile data.
         </p>
-        <ul className="mt-2 text-sm text-red-800 dark:text-red-200 space-y-1">
-          <li>
-            <code className="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-xs">
-              STEAM_API_KEY
-            </code>
-          </li>
-          <li>
-            <code className="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-xs">
-              STEAM_ID
-            </code>
-          </li>
-        </ul>
+        <div className="flex space-x-3">
+          <a
+            href="/config"
+            className="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+          >
+            Configure Steam API
+          </a>
+          <a
+            href="https://steamcommunity.com/dev/apikey"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-4 py-2 bg-red-100 text-red-800 text-sm font-medium rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors dark:bg-red-900/40 dark:text-red-200 dark:hover:bg-red-900/60"
+          >
+            Get Steam API Key
+          </a>
+        </div>
       </div>
     </div>
   );
