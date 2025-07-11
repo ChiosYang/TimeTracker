@@ -1,8 +1,26 @@
-import { getSteamProfile } from "@/lib/services/steam";
+import { getSteamProfile, checkSteamConfig } from "@/lib/services/steam";
 import { isProfileError } from "@/lib/utils/steam";
-import { ProfileCard, ErrorState } from "@/components/steam/steam-profile";
+import { ProfileCard, ErrorState, ConfigurationPrompt } from "@/components/steam/steam-profile";
 
 export default async function DashboardPage() {
+  // 首先检查是否有配置
+  const hasConfig = await checkSteamConfig();
+  
+  if (!hasConfig) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Steam Profile
+          </h1>
+        </header>
+        <main>
+          <ConfigurationPrompt />
+        </main>
+      </div>
+    );
+  }
+
   const profile = await getSteamProfile();
 
   return (

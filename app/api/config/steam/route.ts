@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveUserSteamConfig, getUserSteamConfig, deleteUserSteamConfig, testSteamConfig } from '@/lib/services/config';
 import { ConfigFormData } from '@/lib/types/steam';
+import { revalidateTag } from 'next/cache';
 
 // 生成简单的用户ID（与steam.ts中的逻辑保持一致）
 function generateUserId(): string {
@@ -59,6 +60,9 @@ export async function POST(request: NextRequest) {
     const result = await saveUserSteamConfig(userId, { steamApiKey, steamId });
 
     if (result.success) {
+      // 清除Steam API缓存
+      revalidateTag('steam-profile');
+      
       return NextResponse.json({ 
         message: 'Configuration saved successfully',
         tested: true
@@ -85,6 +89,9 @@ export async function DELETE() {
     const success = await deleteUserSteamConfig(userId);
 
     if (success) {
+      // 清除Steam API缓存
+      revalidateTag('steam-profile');
+      
       return NextResponse.json({ 
         message: 'Configuration deleted successfully' 
       });

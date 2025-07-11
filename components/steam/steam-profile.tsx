@@ -102,6 +102,40 @@ interface ErrorStateProps {
   error: string;
 }
 
+export function ConfigurationPrompt() {
+  return (
+    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+      <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+        Steam Profile Configuration Required
+      </h1>
+      <p className="text-blue-700 dark:text-blue-300 mb-4">
+        To view your Steam profile, you need to configure your Steam API credentials first.
+      </p>
+      <div className="bg-blue-100 dark:bg-blue-900/40 rounded-md p-4">
+        <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
+          This will allow the dashboard to fetch and display your Steam profile information.
+        </p>
+        <div className="flex space-x-3">
+          <a
+            href="/config"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          >
+            Configure Steam API
+          </a>
+          <a
+            href="https://steamcommunity.com/dev/apikey"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/60"
+          >
+            Get Steam API Key
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ErrorState({ error }: ErrorStateProps) {
   return (
     <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">

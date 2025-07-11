@@ -57,7 +57,7 @@ export async function getSteamProfile(userId?: string): Promise<ProfileResult> {
     const response = await fetch(
       `${STEAM_API_ENDPOINT}?key=${STEAM_API_KEY}&steamids=${STEAM_ID}`,
       { 
-        next: { revalidate: CACHE_REVALIDATE_TIME },
+        next: { revalidate: CACHE_REVALIDATE_TIME, tags: ['steam-profile'] },
         headers: {
           'User-Agent': 'Steam-Dashboard/1.0'
         }
