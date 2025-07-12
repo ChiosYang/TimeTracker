@@ -2,16 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { saveUserSteamConfig, getUserSteamConfig, deleteUserSteamConfig, testSteamConfig } from '@/lib/services/config';
 import { ConfigFormData } from '@/lib/types/steam';
 import { revalidateTag } from 'next/cache';
-
-// 生成简单的用户ID（与steam.ts中的逻辑保持一致）
-function generateUserId(): string {
-  return 'default_user';
-}
+import { auth } from '@/auth';
 
 // GET: 获取用户Steam配置
 export async function GET() {
   try {
-    const userId = generateUserId();
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
     const config = await getUserSteamConfig(userId);
     
     if (config) {
@@ -37,6 +41,14 @@ export async function GET() {
 // POST: 保存用户Steam配置
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { steamApiKey, steamId } = body as ConfigFormData;
 
@@ -56,7 +68,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userId = generateUserId();
+    const userId = session.user.id;
     const result = await saveUserSteamConfig(userId, { steamApiKey, steamId });
 
     if (result.success) {
@@ -85,7 +97,15 @@ export async function POST(request: NextRequest) {
 // DELETE: 删除用户Steam配置
 export async function DELETE() {
   try {
-    const userId = generateUserId();
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
     const success = await deleteUserSteamConfig(userId);
 
     if (success) {
