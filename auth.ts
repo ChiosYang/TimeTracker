@@ -15,15 +15,6 @@ async function verifyPasswordInNodeRuntime(password: string, hashedPassword: str
   }
 }
 
-async function hashPasswordInNodeRuntime(password: string): Promise<string> {
-  try {
-    const bcrypt = await import('bcryptjs');
-    return bcrypt.default.hash(password, 12);
-  } catch {
-    throw new Error('Password hashing failed');
-  }
-}
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
@@ -60,32 +51,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         try {
           if (isRegister) {
-            // 注册逻辑 - 简化版，因为主要验证已在API中完成
-            const name = credentials.name as string;
-            
-            const existingUser = await sql`
-              SELECT id FROM users WHERE email = ${email}
-            `;
-            if (existingUser.length > 0) {
-              return null;
-            }
-
-            const hashedPassword = await hashPasswordInNodeRuntime(password);
-            const newUser = await sql`
-              INSERT INTO users (email, name, password_hash)
-              VALUES (${email}, ${name}, ${hashedPassword})
-              RETURNING id, email, name, image
+            // 注册逻辑 - 用户已在API中创建，这里只需获取用户信息
+            const user = await sql`
+              SELECT id, email, name, image 
+              FROM users 
+              WHERE email = ${email}
             `;
 
-            if (!newUser || newUser.length === 0) {
+            if (user.length === 0) {
               return null;
             }
 
             return {
-              id: newUser[0].id,
-              email: newUser[0].email,
-              name: newUser[0].name,
-              image: newUser[0].image
+              id: user[0].id,
+              email: user[0].email,
+              name: user[0].name,
+              image: user[0].image
             };
           } else {
             // 登录逻辑 - 简化版
