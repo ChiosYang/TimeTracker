@@ -61,3 +61,24 @@ export interface ConfigValidationResult {
     steamId?: string;
   };
 }
+
+// Steam游戏相关类型
+export interface SteamGame {
+  appid: number;
+  name?: string;
+  playtime_forever: number;
+  playtime_2weeks?: number;
+  img_icon_url?: string;
+  img_logo_url?: string;
+}
+
+export interface SteamGamesResponse {
+  game_count: number;
+  games: SteamGame[];
+}
+
+export interface SteamGamesApiError {
+  error: string;
+}
+
+export type SteamGamesResult = SteamGamesResponse | SteamGamesApiError;

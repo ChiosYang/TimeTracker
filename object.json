@@ -1,0 +1,47 @@
+{
+  "response": {
+    "game_count": 85,
+    "games": [
+      {
+        "appid": 620,
+        "name": "Portal 2",
+        "playtime_forever": 749,
+        "img_icon_url": "2e478fc6874d06ae5baf0d147f6f21203291aa02",
+        "has_community_visible_stats": true,
+        "playtime_windows_forever": 0,
+        "playtime_mac_forever": 0,
+        "playtime_linux_forever": 0,
+        "playtime_deck_forever": 0,
+        "rtime_last_played": 1553921675,
+        "has_leaderboards": true,
+        "playtime_disconnected": 0
+      },
+      {
+        "appid": 206440,
+        "name": "To the Moon",
+        "playtime_forever": 208,
+        "img_icon_url": "6e29eb4076a6253fdbccb987a2a21746d2df54d7",
+        "has_community_visible_stats": true,
+        "playtime_windows_forever": 208,
+        "playtime_mac_forever": 0,
+        "playtime_linux_forever": 0,
+        "playtime_deck_forever": 0,
+        "rtime_last_played": 1576226583,
+        "playtime_disconnected": 0
+      },
+      {
+        "appid": 8870,
+        "name": "BioShock Infinite",
+        "playtime_forever": 428,
+        "img_icon_url": "4ebaf5f9ee74f50152f7ff361debef7553fa0e4e",
+        "has_community_visible_stats": true,
+        "playtime_windows_forever": 0,
+        "playtime_mac_forever": 0,
+        "playtime_linux_forever": 0,
+        "playtime_deck_forever": 0,
+        "rtime_last_played": 1546700420,
+        "playtime_disconnected": 0
+      }
+    ]
+  }
+}

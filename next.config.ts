@@ -9,6 +9,24 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'media.steampowered.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.akamai.steamstatic.com',
+        port: '',
+        pathname: '/**', 
+      },
+      {
+        protocol: 'https',
+        hostname: 'shared.akamai.steamstatic.com',
+        port: '',
+        pathname: '/**', 
+      },
     ],
   },
 };
