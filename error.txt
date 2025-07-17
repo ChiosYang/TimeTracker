@@ -1,20 +1,13 @@
-Fetching app details from: https://store.steampowered.com/api/appdetails?appids=620%2C206440%2C8870%2C228300%2C209000%2C268910%2C286160%2C286690%2C287390%2C237930%2C243470%2C227940%2C313340%2C203160%2C250900%2C319630%2C367520%2C374320%2C383870%2C208650&filters=basic
-Fetching app details from: https://store.steampowered.com/api/appdetails?appids=368500%2C239140%2C431960%2C391220%2C460790%2C460950%2C377160%2C394360%2C403640%2C501300%2C504230%2C289070%2C292030%2C578080%2C614570%2C632470%2C644560%2C683320%2C414340%2C747350&filters=basic
-Fetching app details from: https://store.steampowered.com/api/appdetails?appids=435150%2C730%2C736190%2C753640%2C627270%2C883710%2C814380%2C412020%2C1449560%2C779340%2C752590%2C1057090%2C703080%2C976730%2C1145350%2C203770%2C1145360%2C1245620%2C1237970%2C1288310&filters=basic
-Fetching app details from: https://store.steampowered.com/api/appdetails?appids=1289310%2C1296830%2C310360%2C242700%2C1669980%2C1551360%2C1718570%2C1942280%2C2073850%2C2194530%2C990080%2C418370%2C1196590%2C1236300%2C2138710%2C2357570%2C1086940%2C2050650%2C1868140%2C1325200&filters=basic
-Fetching app details from: https://store.steampowered.com/api/appdetails?appids=2923300%2C952060%2C952070%2C2358720%2C1422450&filters=basic   
-Response status for app details: 400
-App details request failed with status: 400 - Bad Request
-App details error response: null
-Response status for app details: 400
-App details request failed with status: 400 - Bad Request
-App details error response: null
-Response status for app details: 400
-App details request failed with status: 400 - Bad Request
-Response status for app details: 400
-App details request failed with status: 400 - Bad Request
-App details error response: null
-App details error response: null
-Response status for app details: 400
-App details request failed with status: 400 - Bad Request
-App details error response: null
+   Linting and checking validity of types  ..Failed to compile.
+
+./app/(routes)/games/[appid]/page.tsx:93:28
+Type error: Parameter 'genre' implicitly has an 'any' type.
+
+  91 |
+  92 |             <div className="flex flex-wrap gap-2 mb-6">
+> 93 |               {genres?.map(genre => (
+     |                            ^
+  94 |                 <span key={genre.id} className="px-3 py-1 text-xs font-medium bg-gray-700/50 text-gray-300 rounded-full">
+  95 |                   {genre.description}
+  96 |                 </span>
+Next.js build worker exited with code: 1 and signal: null

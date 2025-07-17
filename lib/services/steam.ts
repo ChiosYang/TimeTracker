@@ -79,3 +79,27 @@ export async function checkSteamConfig(userId: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function getGameDetails(appid: string) {
+  const url = `https://store.steampowered.com/api/appdetails?appids=${appid}`;
+
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: CACHE_REVALIDATE_TIME },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch game details for appid: ${appid}`);
+      return null;
+    }
+    const data = await response.json();
+
+    if (data[appid] && data[appid].success) {
+      return data[appid].data;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching game details:", error);
+    return null;
+  }
+}
