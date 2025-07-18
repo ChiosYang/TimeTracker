@@ -1,6 +1,29 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // turbopack: {
+  //   rules: {
+  //     "*.svg": {
+  //       loaders: ["@svgr/webpack"],
+  //       as: "*.js",
+  //     },
+  //   },
+  // },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              icon: true,
+            },
+          },
+        ],
+        as: '*.js',
+      },
+    },
+  },
   images: {
     remotePatterns: [
       {
@@ -19,23 +42,30 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'cdn.akamai.steamstatic.com',
         port: '',
-        pathname: '/**', 
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'shared.akamai.steamstatic.com',
         port: '',
-        pathname: '/**', 
+        pathname: '/**',
       },
-            {
+      {
         protocol: 'https',
         hostname: 'store.akamai.steamstatic.com',
         port: '',
-        pathname: '/**', 
+        pathname: '/**',
       },
-      
-      
     ],
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    });
+
+    return config;
   },
 };
 

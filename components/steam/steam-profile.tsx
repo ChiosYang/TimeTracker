@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { SteamPlayer } from "@/lib/types/steam";
 import { getPersonaState } from "@/lib/utils/steam";
+import SteamLogo from "@/public/logo/steam.svg";
 
 interface StatusIndicatorProps {
   personastate: number;
@@ -8,7 +9,7 @@ interface StatusIndicatorProps {
 
 export function StatusIndicator({ personastate }: StatusIndicatorProps) {
   const status = getPersonaState(personastate);
-  
+
   return (
     <div className="flex items-center space-x-2 mt-1">
       <div className={`w-3 h-3 rounded-full ${status.bgColor}`} />
@@ -47,7 +48,7 @@ export function ProfileInfo({ profile }: ProfileInfoProps) {
       <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
         {profile.personaname || "Unknown User"}
       </h2>
-      
+
       <StatusIndicator personastate={profile.personastate} />
 
       <div className="mt-3 space-y-2">
@@ -89,7 +90,8 @@ interface ProfileCardProps {
 
 export function ProfileCard({ profile }: ProfileCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-950 shadow-md p-6">
+    <div className="relative bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-950 shadow-md p-6">
+      <SteamLogo className="absolute top-4 right-4 h-12 w-12" fill='#ffffff'/>
       <div className="flex items-start space-x-6">
         <ProfileAvatar profile={profile} />
         <ProfileInfo profile={profile} />
@@ -109,11 +111,13 @@ export function ConfigurationPrompt() {
         Steam Profile Configuration Required
       </h1>
       <p className="text-blue-700 dark:text-blue-300 mb-4">
-        To view your Steam profile, you need to configure your Steam API credentials first.
+        To view your Steam profile, you need to configure your Steam API
+        credentials first.
       </p>
       <div className="bg-blue-100 dark:bg-blue-900/40 rounded-md p-4">
         <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
-          This will allow the dashboard to fetch and display your Steam profile information.
+          This will allow the dashboard to fetch and display your Steam profile
+          information.
         </p>
         <div className="flex space-x-3">
           <a
@@ -147,7 +151,8 @@ export function ErrorState({ error }: ErrorStateProps) {
       </p>
       <div className="bg-red-100 dark:bg-red-900/40 rounded-md p-4">
         <p className="text-sm text-red-800 dark:text-red-200 mb-4">
-          Please configure your Steam API credentials to access your profile data.
+          Please configure your Steam API credentials to access your profile
+          data.
         </p>
         <div className="flex space-x-3">
           <a
@@ -160,7 +165,7 @@ export function ErrorState({ error }: ErrorStateProps) {
             href="https://steamcommunity.com/dev/apikey"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 bg-red-100 text-red-800 text-sm font-medium rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors dark:bg-red-900/40 dark:text-red-200 dark:hover:bg-red-900/60"
+            className="inline-flex items-center px-4 py-2 bg-red-100 text-red-800 text-sm font-medium rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors dark:bg-red-900/40 dark:text-red-200 dark:hover:bg-blue-900/60"
           >
             Get Steam API Key
           </a>
