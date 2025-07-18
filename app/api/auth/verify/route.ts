@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
-// 强制使用Node.js runtime以支持bcryptjs
+// 强制使用Node.js runtime以支持bcrypt
 export const runtime = 'nodejs';
 
 const sql = neon(process.env.DATABASE_URL!);

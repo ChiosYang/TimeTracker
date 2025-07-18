@@ -8,8 +8,8 @@ const sql = neon(process.env.DATABASE_URL!)
 async function verifyPasswordInNodeRuntime(password: string, hashedPassword: string): Promise<boolean> {
   // 调用我们的验证API来处理密码验证
   try {
-    const bcrypt = await import('bcryptjs');
-    return bcrypt.default.compare(password, hashedPassword);
+    const bcrypt = await import('bcrypt');
+    return bcrypt.compare(password, hashedPassword);
   } catch {
     return false;
   }
