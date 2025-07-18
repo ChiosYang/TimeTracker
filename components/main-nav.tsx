@@ -12,6 +12,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Logo } from "@/components/ui/logo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,8 +46,7 @@ export function MainNav() {
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center gap-x-4">
         <Link href="/" className="flex items-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/Logo.svg" alt="Logo" className="h-8 w-8 object-contain" />
+          <Logo className="h-8 w-8 text-white" />
         </Link>
         <NavigationMenu>
           <NavigationMenuList>
