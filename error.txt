@@ -1,13 +1,66 @@
-   Linting and checking validity of types  ..Failed to compile.
 
-./app/(routes)/games/[appid]/page.tsx:93:28
-Type error: Parameter 'genre' implicitly has an 'any' type.
+> Build failed because of webpack errors
+PS C:\PTS\pts> npm run build
 
-  91 |
-  92 |             <div className="flex flex-wrap gap-2 mb-6">
-> 93 |               {genres?.map(genre => (
-     |                            ^
-  94 |                 <span key={genre.id} className="px-3 py-1 text-xs font-medium bg-gray-700/50 text-gray-300 rounded-full">
-  95 |                   {genre.description}
-  96 |                 </span>
+> pts@0.1.0 build
+> next build
+
+   ▲ Next.js 15.3.5
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 36.0s
+
+./node_modules/bcryptjs/index.js
+A Node.js module is loaded ('crypto' at line 32) which is not supported in the Edge Runtime.
+Learn More: https://nextjs.org/docs/messages/node-module-in-edge-runtime
+
+Import trace for requested module:
+./node_modules/bcryptjs/index.js
+./auth.ts
+
+./node_modules/bcryptjs/index.js
+A Node.js API is used (process.nextTick at line: 337) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/bcryptjs/index.js
+./auth.ts
+
+./node_modules/bcryptjs/index.js
+A Node.js API is used (setImmediate at line: 338) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/bcryptjs/index.js
+./auth.ts
+
+./node_modules/bcryptjs/index.js
+A Node.js API is used (setImmediate at line: 339) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/bcryptjs/index.js
+./auth.ts
+
+./node_modules/bcryptjs/index.js
+A Node.js API is used (process.nextTick at line: 340) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/bcryptjs/index.js
+./auth.ts
+
+   Linting and checking validity of types  ...Failed to compile.
+
+./next.config.ts:60:54
+Type error: Parameter 'rule' implicitly has an 'any' type.
+
+  58 |   webpack(config) {
+  59 |     // 1. 找到 Next.js 内置的 SVG 处理规则
+> 60 |     const fileLoaderRule = config.module.rules.find((rule) =>
+     |                                                      ^
+  61 |       rule.test?.test?.('.svg'),
+  62 |     )
+  63 |
 Next.js build worker exited with code: 1 and signal: null

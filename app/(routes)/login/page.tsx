@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AlertCircle, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
-import Logo from "@/public/Logo.svg";
+import Logo from "@/components/ui/icon/Logo.svg";
 
 export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);

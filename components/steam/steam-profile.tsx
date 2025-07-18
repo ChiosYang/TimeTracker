@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { SteamPlayer } from "@/lib/types/steam";
 import { getPersonaState } from "@/lib/utils/steam";
-import SteamLogo from "@/public/logo/steam.svg";
+import SteamLogo from "@/components/ui/icon/steam.svg";
 
 interface StatusIndicatorProps {
   personastate: number;
