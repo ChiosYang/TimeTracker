@@ -119,7 +119,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider !== 'credentials') {
+      if (account && account.provider !== 'credentials') {
         try {
           const email = user.email;
           if (!email) {
