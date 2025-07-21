@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     email TEXT UNIQUE NOT NULL,
     name TEXT,
     image TEXT,
+    provider TEXT, -- 新增字段，记录用户来源 (e.g., 'credentials', 'google', 'github')
     email_verified TIMESTAMPTZ,
     password_hash TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),

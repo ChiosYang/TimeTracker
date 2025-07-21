@@ -1,5 +1,7 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import GitHub from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
 import { neon } from "@neondatabase/serverless"
 
 const sql = neon(process.env.DATABASE_URL!)
@@ -17,6 +19,14 @@ async function verifyPasswordInNodeRuntime(password: string, hashedPassword: str
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    GitHub({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
     Credentials({
       name: "credentials",
       credentials: {
@@ -108,6 +118,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: "/login"
   },
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== 'credentials') {
+        try {
+          const email = user.email;
+          if (!email) {
+            return false; 
+          }
+          const existingUser = await sql`
+            SELECT id FROM users WHERE email = ${email}
+          `;
+          if (existingUser.length === 0) {
+            await sql`
+              INSERT INTO users (id, name, email, image, provider)
+              VALUES (${user.id}, ${user.name}, ${user.email}, ${user.image}, ${account.provider})
+            `;
+          }
+        } catch (error) {
+          console.error("OAuth signIn callback error:", error);
+          return false;
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id

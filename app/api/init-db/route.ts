@@ -12,6 +12,7 @@ export async function POST() {
           email TEXT UNIQUE NOT NULL,
           name TEXT,
           image TEXT,
+          provider TEXT, -- 新增字段
           email_verified TIMESTAMPTZ,
           password_hash TEXT,
           created_at TIMESTAMPTZ DEFAULT NOW(),
