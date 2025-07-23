@@ -4,6 +4,7 @@ import "./globals.css";
 import { MainNav } from "@/components/main-nav";
 import { AuthProvider } from "@/components/auth-provider";
 import { Analytics } from "@vercel/analytics/next"
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
           <main>{children}</main>
         </AuthProvider>
         <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   );
