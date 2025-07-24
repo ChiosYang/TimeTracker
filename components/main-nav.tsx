@@ -82,6 +82,16 @@ export function MainNav() {
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/chat"
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Chat
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
               </>
             )}
           </NavigationMenuList>
