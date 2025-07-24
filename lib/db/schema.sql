@@ -48,10 +48,28 @@ CREATE TABLE IF NOT EXISTS user_steam_configs (
     UNIQUE(user_id)
 );
 
+-- 用户游戏库表
+CREATE TABLE IF NOT EXISTS user_games (
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    app_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    playtime_forever INTEGER DEFAULT 0,
+    img_icon_url TEXT,
+    header_image TEXT,
+    last_played TIMESTAMPTZ,
+    synced_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, app_id)
+);
+
 -- 创建索引
 CREATE INDEX IF NOT EXISTS idx_user_steam_configs_user_id ON user_steam_configs(user_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON accounts(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_games_user_id ON user_games(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_games_app_id ON user_games(app_id);
+CREATE INDEX IF NOT EXISTS idx_user_games_synced_at ON user_games(synced_at);
 
 -- 添加更新时间触发器
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -64,5 +82,10 @@ $$ language 'plpgsql';
 
 CREATE TRIGGER IF NOT EXISTS update_user_steam_configs_updated_at
     BEFORE UPDATE ON user_steam_configs
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER IF NOT EXISTS update_user_games_updated_at
+    BEFORE UPDATE ON user_games
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();

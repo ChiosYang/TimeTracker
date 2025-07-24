@@ -73,6 +73,34 @@ export async function POST() {
     `;
 
     await sql`
+      CREATE TABLE IF NOT EXISTS user_games (
+          id SERIAL PRIMARY KEY,
+          user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          app_id INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          playtime_forever INTEGER DEFAULT 0,
+          img_icon_url TEXT,
+          header_image TEXT,
+          last_played TIMESTAMPTZ,
+          synced_at TIMESTAMPTZ DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW(),
+          UNIQUE(user_id, app_id)
+      )
+    `;
+
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_user_games_user_id ON user_games(user_id)
+    `;
+
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_user_games_app_id ON user_games(app_id)
+    `;
+
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_user_games_synced_at ON user_games(synced_at)
+    `;
+
+    await sql`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
       RETURNS TRIGGER AS $$
       BEGIN
@@ -88,6 +116,19 @@ export async function POST() {
           IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'update_user_steam_configs_updated_at') THEN
               CREATE TRIGGER update_user_steam_configs_updated_at
                   BEFORE UPDATE ON user_steam_configs
+                  FOR EACH ROW
+                  EXECUTE FUNCTION update_updated_at_column();
+          END IF;
+      END;
+      $$
+    `;
+
+    await sql`
+      DO $$
+      BEGIN
+          IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'update_user_games_updated_at') THEN
+              CREATE TRIGGER update_user_games_updated_at
+                  BEFORE UPDATE ON user_games
                   FOR EACH ROW
                   EXECUTE FUNCTION update_updated_at_column();
           END IF;
