@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
   const result = await streamText({
     model: openrouter.chat('qwen/qwen3-235b-a22b-07-25:free'),
-    prompt: messages[messages.length - 1].content,
+    messages: messages,
   });
 
   return result.toDataStreamResponse();
