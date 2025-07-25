@@ -129,3 +129,57 @@ export async function getUserGameByAppId(userId: string, appId: number): Promise
   
   return rows[0] as UserGame || null;
 }
+
+export async function getTopUserGames(userId: string, limit = 5): Promise<UserGame[]> {
+  const rows = await sql`
+    SELECT 
+      id,
+      user_id as "userId",
+      app_id as "appId", 
+      name,
+      playtime_forever as "playtimeForever",
+      img_icon_url as "imgIconUrl",
+      header_image as "headerImage",
+      last_played as "lastPlayed",
+      synced_at as "syncedAt",
+      updated_at as "updatedAt"
+    FROM user_games 
+    WHERE user_id = ${userId} AND playtime_forever > 0
+    ORDER BY playtime_forever DESC
+    LIMIT ${limit}
+  `;
+  
+  return rows as UserGame[];
+}
+
+export async function getUserGamesForRecommendation(userId: string): Promise<{
+  topGames: UserGame[];
+  allGames: UserGame[];
+  totalCount: number;
+}> {
+  // 获取用户时长最高的5个游戏
+  const topGames = await getTopUserGames(userId, 5);
+  
+  // 获取用户所有游戏的基本信息（用于推荐时排除）
+  const allGamesRows = await sql`
+    SELECT 
+      app_id as "appId", 
+      name,
+      playtime_forever as "playtimeForever"
+    FROM user_games 
+    WHERE user_id = ${userId}
+    ORDER BY playtime_forever DESC
+  `;
+  
+  const countRows = await sql`
+    SELECT COUNT(*) as count 
+    FROM user_games 
+    WHERE user_id = ${userId}
+  `;
+  
+  return {
+    topGames,
+    allGames: allGamesRows as UserGame[],
+    totalCount: parseInt(countRows[0].count)
+  };
+}

@@ -55,6 +55,16 @@ export function MainNav() {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
+                      href="/recommendations"
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Recomand
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
                       href="/games"
                       className={navigationMenuTriggerStyle()}
                     >
@@ -84,10 +94,7 @@ export function MainNav() {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
-                    <Link
-                      href="/chat"
-                      className={navigationMenuTriggerStyle()}
-                    >
+                    <Link href="/chat" className={navigationMenuTriggerStyle()}>
                       Chat
                     </Link>
                   </NavigationMenuLink>
