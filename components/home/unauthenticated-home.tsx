@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { AnimatedHeroSection } from "./animated-hero-section"
 
 export function UnauthenticatedHome() {
   return (
@@ -8,12 +9,7 @@ export function UnauthenticatedHome() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-            KAIOSEI
-          </h1>
-          <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            AI驱动的Steam游戏推荐与管理工具，让你发现游戏库中的隐藏宝藏
-          </p>
+          <AnimatedHeroSection />
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
