@@ -1,21 +1,29 @@
-import Image from "next/image";
+import { auth } from "@/auth";
+import { getGameStats } from "@/lib/db/user-games";
+import { UnauthenticatedHome } from "@/components/home/unauthenticated-home";
+import { AuthenticatedHome } from "@/components/home/authenticated-home";
 
-export default function Home() {
+export default async function HomePage() {
+  const session = await auth();
+
+  // 如果用户未登录，显示营销页面
+  if (!session?.user?.id) {
+    return <UnauthenticatedHome />;
+  }
+
+  // 获取用户游戏统计数据
+  let gameStats = null;
+  try {
+    gameStats = await getGameStats(session.user.id);
+  } catch (error) {
+    console.error("Failed to fetch game stats:", error);
+    // 即使数据获取失败，也要显示已登录页面
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className=""
-          src="/nigaoe_spinoza.png"
-          alt="logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <div className="flex items-center">
-          <div className="text-4xl font-bold">欢迎张总莅临考察！</div>
-        </div>
-      </main>
-    </div>
+    <AuthenticatedHome 
+      user={session.user}
+      gameStats={gameStats}
+    />
   );
 }

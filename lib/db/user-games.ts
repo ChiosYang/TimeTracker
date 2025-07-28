@@ -183,3 +183,44 @@ export async function getUserGamesForRecommendation(userId: string): Promise<{
     totalCount: parseInt(countRows[0].count)
   };
 }
+
+export async function getGameStats(userId: string): Promise<{
+  totalGames: number;
+  totalPlaytime: number;
+  topGame?: {
+    name: string;
+    playtime: number;
+  };
+  lastSync?: string;
+}> {
+  // 获取游戏总数和总时长
+  const statsRows = await sql`
+    SELECT 
+      COUNT(*) as total_games,
+      SUM(playtime_forever) as total_playtime
+    FROM user_games 
+    WHERE user_id = ${userId}
+  `;
+  
+  // 获取最爱游戏（时长最高）
+  const topGameRows = await sql`
+    SELECT name, playtime_forever as playtime
+    FROM user_games 
+    WHERE user_id = ${userId} AND playtime_forever > 0
+    ORDER BY playtime_forever DESC
+    LIMIT 1
+  `;
+  
+  // 获取最后同步时间
+  const lastSync = await getLastSyncTime(userId);
+  
+  return {
+    totalGames: parseInt(statsRows[0]?.total_games || '0'),
+    totalPlaytime: parseInt(statsRows[0]?.total_playtime || '0'),
+    topGame: topGameRows[0] ? {
+      name: topGameRows[0].name,
+      playtime: topGameRows[0].playtime
+    } : undefined,
+    lastSync: lastSync?.toISOString() || undefined
+  };
+}
