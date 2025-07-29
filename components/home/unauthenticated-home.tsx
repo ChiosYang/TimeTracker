@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AnimatedHeroSection } from "./animated-hero-section"
+import { ShinyButton } from "@/components/magicui/shiny-button"
 
 export function UnauthenticatedHome() {
   return (
@@ -13,12 +14,12 @@ export function UnauthenticatedHome() {
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button asChild size="lg" className="px-8 py-3 text-lg">
-              <Link href="/login">
+            <Link href="/login">
+              <ShinyButton className="!h-10 !px-8 !py-0 text-lg bg-white text-black border hover:bg-gray-50 flex items-center justify-center [&>span]:!text-lg [&>span]:!normal-case [&>span]:!tracking-normal [&>span]:!h-full [&>span]:!flex [&>span]:!items-center [&>span]:!justify-center">
                 立即开始
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="px-8 py-3 text-lg">
+              </ShinyButton>
+            </Link>
+            <Button asChild variant="outline" size="lg" className="px-8 py-4 text-lg">
               <Link href="#features">
                 了解更多
               </Link>
