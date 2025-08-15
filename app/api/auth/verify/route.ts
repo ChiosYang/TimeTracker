@@ -9,7 +9,15 @@ const sql = neon(process.env.DATABASE_URL!);
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, name, isRegister } = await request.json();
+    const { password, hashedPassword, email, name, isRegister } = await request.json();
+    
+    // 如果只是验证密码
+    if (password && hashedPassword && !email) {
+      const isValid = await bcrypt.compare(password, hashedPassword);
+      return NextResponse.json({ valid: isValid });
+    }
+    
+    // 原有的注册/登录逻辑
 
     // 邮箱格式验证
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
