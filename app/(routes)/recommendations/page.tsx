@@ -1,4 +1,5 @@
 import { GameRecommendation } from "@/components/games/game-recommendation";
+import { SyncDetailsButton } from "@/components/games/sync-details-button";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
@@ -17,8 +18,13 @@ export default async function RecommendationsPage() {
           下一款游戏玩什么？
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          基于您的游戏历史和偏好，为您量身推荐最适合的游戏
+          基于RAG技术的智能推荐系统，为您提供更精准的游戏推荐
         </p>
+      </div>
+
+      {/* RAG同步控制面板 */}
+      <div className="mb-8">
+        <SyncDetailsButton />
       </div>
 
       {/* 主要推荐组件 */}
@@ -47,27 +53,27 @@ export default async function RecommendationsPage() {
 
           <div className="flex-1">
             <h2 className="text-xl font-semibold text-indigo-900 dark:text-indigo-100 mb-2">
-              智能推荐系统如何工作
+              RAG智能推荐系统工作原理
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-indigo-800 dark:text-indigo-200">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                  <span>分析您游戏时长最高的5款游戏</span>
+                  <span>使用Gemini Embedding向量化游戏信息</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                  <span>识别您偏好的游戏类型和风格</span>
+                  <span>基于语义相似度检索相关游戏</span>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                  <span>考虑开发商和发布时间偏好</span>
+                  <span>结合用户偏好进行智能分析</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                  <span>推荐库中被忽略的优质游戏</span>
+                  <span>LangChain驱动的推荐生成</span>
                 </div>
               </div>
             </div>
@@ -81,9 +87,9 @@ export default async function RecommendationsPage() {
             推荐提示
           </h3>
           <div className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-            <p>• 推荐基于您的Steam游戏库数据，请确保已同步最新的游戏信息</p>
-            <p>• 每次推荐都会重新分析您的偏好，结果可能有所不同</p>
-            <p>• 建议定期获取推荐，发现您游戏库中的隐藏宝藏</p>
+            <p>• RAG推荐需要先同步游戏库详情，首次使用请点击上方&ldquo;开始同步&rdquo;</p>
+            <p>• 使用Google Gemini和LangChain技术，完全免费且推荐质量更高</p>
+            <p>• 建议定期同步最新游戏信息，获得更精准的推荐结果</p>
           </div>
         </div>
       </div>
