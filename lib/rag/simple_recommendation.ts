@@ -111,8 +111,14 @@ ${context}
         
         const recommendation = parseResponse(response.content as string);
 
+        // 将similarity字段映射为userPreferenceAnalysis，以匹配前端期望
+        const mappedRecommendation = {
+            ...recommendation,
+            userPreferenceAnalysis: recommendation.similarity
+        };
+
         return {
-            recommendation,
+            recommendation: mappedRecommendation,
             metadata: {
                 userTopGames: topGames.map(g => ({ name: g.name, hours: Math.round(g.playtimeForever / 60) })),
                 similarGamesFound: similarGames.length,
