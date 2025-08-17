@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import { neon } from "@neondatabase/serverless"
+import { log } from "@/lib/utils/logger"
 
 const sql = neon(process.env.DATABASE_URL!)
 
@@ -103,7 +104,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             };
           }
         } catch (error) {
-          console.error("Auth.js认证错误:", error);
+          log.error("NextAuth认证错误", error, { 
+            email, 
+            isRegister, 
+            operation: isRegister ? 'register' : 'login' 
+          });
           return null;
         }
       }
@@ -135,7 +140,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             `;
           }
         } catch (error) {
-          console.error("OAuth signIn callback error:", error);
+          log.error("OAuth登录回调错误", error, { 
+            email: user.email, 
+            provider: account.provider,
+            userId: user.id 
+          });
           return false;
         }
       }
@@ -154,10 +163,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session
     }
   },
-  // 自定义错误处理
+  // 自定义事件处理
   events: {
     async signIn(message) {
-      console.log("Sign in event:", message)
+      log.user("用户登录事件", message.user?.email || undefined, { 
+        provider: message.account?.provider,
+        isNewUser: message.isNewUser 
+      });
     }
   }
 })

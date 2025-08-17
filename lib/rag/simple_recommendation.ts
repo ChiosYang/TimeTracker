@@ -2,6 +2,8 @@ import { sql } from '@/lib/db/connection';
 import { ChatOpenAI } from '@langchain/openai';
 import { embedSingleText } from '@/lib/services/embedding_service';
 import { getTopUserGames } from '@/lib/db/user-games';
+import { log } from '@/lib/utils/logger';
+import { createError } from '@/lib/utils/error-handler';
 
 // 使用免费的Kimi模型
 const llm = new ChatOpenAI({
@@ -40,7 +42,7 @@ async function searchSimilarGames(queryText: string, limit = 10) {
         return results;
         
     } catch (error) {
-        console.error('向量搜索失败:', error);
+        log.error('向量搜索失败', error, { queryText, limit });
         return [];
     }
 }
@@ -120,7 +122,11 @@ ${context}
         return {
             recommendation: mappedRecommendation,
             metadata: {
-                userTopGames: topGames.map(g => ({ name: g.name, hours: Math.round(g.playtimeForever / 60) })),
+                userTopGames: topGames.map(g => ({ 
+                    appId: g.appId,
+                    name: g.name, 
+                    playtimeForever: g.playtimeForever
+                })),
                 similarGamesFound: similarGames.length,
                 maxSimilarity: similarGames[0]?.similarity || 0,
                 generatedAt: new Date().toISOString()
@@ -128,8 +134,8 @@ ${context}
         };
 
     } catch (error) {
-        console.error('简化RAG推荐失败:', error);
-        throw error;
+        log.error('RAG推荐生成失败', error, { userId });
+        throw createError.ragUnavailable('推荐服务暂时不可用，请稍后再试');
     }
 }
 
@@ -140,7 +146,7 @@ export async function isRagServiceReady(): Promise<{ ready: boolean; gameCount: 
         const gameCount = parseInt(results[0].count) || 0;
         return { ready: gameCount > 0, gameCount };
     } catch (error) {
-        console.error('RAG服务检查失败:', error);
+        log.error('RAG服务状态检查失败', error);
         return { ready: false, gameCount: 0 };
     }
 }

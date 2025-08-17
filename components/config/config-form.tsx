@@ -24,7 +24,8 @@ export function ConfigForm({ onSubmit, initialConfig, isLoading }: ConfigFormPro
     try {
       await onSubmit(formData);
     } catch (error) {
-      console.error('Form submission error:', error);
+      // 在客户端组件中使用console.error保持兼容性
+      console.error('配置表单提交失败:', error);
     } finally {
       setIsSubmitting(false);
     }

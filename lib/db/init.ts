@@ -1,4 +1,5 @@
 import { sql } from './connection';
+import { log } from '@/lib/utils/logger';
 
 export async function initDatabase() {
   try {
@@ -42,10 +43,10 @@ export async function initDatabase() {
           EXECUTE FUNCTION update_updated_at_column()
     `;
 
-    console.log('Database initialized successfully');
+    log.info('数据库初始化成功');
     return true;
   } catch (error) {
-    console.error('Failed to initialize database:', error);
+    log.error('数据库初始化失败', error);
     return false;
   }
 }

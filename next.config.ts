@@ -55,10 +55,16 @@ const nextConfig: NextConfig = {
   },
 
   // 重点：修正 Webpack 配置
-  webpack(config) {
+  webpack(config: any) {
     // 1. 找到 Next.js 内置的 SVG 处理规则
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fileLoaderRule = config.module.rules.find((rule: any) =>
+    interface WebpackRule {
+      test?: {
+        test?: (fileName: string) => boolean;
+      };
+      [key: string]: any;
+    }
+    
+    const fileLoaderRule = config.module.rules.find((rule: WebpackRule) =>
       rule.test?.test?.('.svg'),
     )
 

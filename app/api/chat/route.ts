@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = await streamText({
-    model: openrouter.chat('qwen/qwen3-235b-a22b-07-25:free'),
+    model: openrouter.chat('z-ai/glm-4.5-air:free'),
     messages: messages,
   });
 

@@ -1,61 +1,58 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 import { auth } from "@/auth";
 import { getSimpleRagRecommendation, isRagServiceReady } from "@/lib/rag/simple_recommendation";
+import { apiResponse } from "@/lib/utils/api-response";
+import { createError } from "@/lib/utils/error-handler";
+import { log } from "@/lib/utils/logger";
 
 export async function POST() {
+  const startTime = Date.now();
+  
   try {
+    log.api.request('POST', '/api/games/recommendation');
+    
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json({ error: "未授权访问" }, { status: 401 });
+      throw createError.unauthorized();
     }
 
     const userId = session.user.id;
+    log.user('请求RAG游戏推荐', userId);
 
     // 检查RAG服务是否就绪
     const serviceStatus = await isRagServiceReady();
     if (!serviceStatus.ready) {
-      return NextResponse.json({
-        error: "推荐服务未就绪",
-        suggestion: "请先同步游戏库详情，然后重试",
-        syncedCount: serviceStatus.gameCount
-      }, { status: 503 });
+      throw createError.ragUnavailable(
+        `推荐服务未就绪，请先同步游戏库详情。当前已同步${serviceStatus.gameCount}个游戏`
+      );
     }
 
     // 调用简化RAG推荐服务
     const ragResult = await getSimpleRagRecommendation(userId);
 
-    return NextResponse.json({
+    const responseData = {
       success: true,
       recommendation: ragResult.recommendation,
-      metadata: {
-        ...ragResult.metadata,
-        syncedGamesCount: serviceStatus.gameCount,
-        method: "SimpleRAG",
-        version: "1.1"
+      analysisData: {
+        topGames: ragResult.metadata.userTopGames,
+        totalGames: serviceStatus.gameCount,
+        analysisTimestamp: new Date().toISOString()
       }
+    };
+
+    const duration = Date.now() - startTime;
+    log.api.response('POST', '/api/games/recommendation', 200, duration, {
+      userId,
+      similarGamesFound: ragResult.metadata.similarGamesFound
     });
 
+    return NextResponse.json(responseData, { status: 200 });
+
   } catch (error) {
-    console.error("RAG游戏推荐错误:", error);
+    const duration = Date.now() - startTime;
+    log.api.response('POST', '/api/games/recommendation', 500, duration);
     
-    // 简化错误处理
-    const getErrorInfo = (error: unknown) => {
-      if (error instanceof Error) {
-        if (error.message.includes("游戏库为空")) {
-          return { message: "您的游戏库为空或未同步，请先同步Steam游戏库", status: 400 };
-        }
-        if (error.message.includes("API")) {
-          return { message: "AI服务暂时不可用，请稍后重试", status: 503 };
-        }
-        return { message: error.message, status: 500 };
-      }
-      return { message: "生成推荐时发生未知错误", status: 500 };
-    };
-    
-    const errorInfo = getErrorInfo(error);
-    return NextResponse.json({ 
-      error: errorInfo.message
-    }, { status: errorInfo.status });
+    return apiResponse.error(error as Error);
   }
 }
 

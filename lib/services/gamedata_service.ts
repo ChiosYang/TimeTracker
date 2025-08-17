@@ -2,6 +2,7 @@ import { sql } from '@/lib/db/connection';
 import { getGameDetails } from '@/lib/services/steam';
 import { embedSingleText } from '@/lib/services/embedding_service';
 import { getUserGames } from '@/lib/db/user-games';
+import { log } from '@/lib/utils/logger';
 
 // 游戏详情接口
 interface GenreItem {
@@ -44,23 +45,23 @@ function buildEmbeddingText(details: GameDetails): string {
 
 // 同步单个游戏的详情和embedding
 export async function syncAndEmbedGame(appId: number): Promise<void> {
-  console.log(`开始同步游戏: ${appId}`);
+  log.info('开始同步游戏', { appId });
   
   try {
     // 获取游戏详情
     const details = await getGameDetails(appId.toString());
     if (!details || !details.name) {
-      console.log(`获取游戏 ${appId} 详情失败或数据不完整`);
+      log.warn('获取游戏详情失败或数据不完整', { appId });
       return;
     }
 
     // 构建embedding文本
     const textToEmbed = buildEmbeddingText(details);
-    console.log(`为游戏 ${appId} 生成embedding文本: ${textToEmbed.substring(0, 100)}...`);
+    log.debug('为游戏生成embedding文本', { appId, textPreview: textToEmbed.substring(0, 100) });
     
     // 生成向量
     const vector = await embedSingleText(textToEmbed);
-    console.log(`为游戏 ${appId} 生成向量成功，维度: ${vector.length}`);
+    log.debug('为游戏生成向量成功', { appId, vectorDimension: vector.length });
 
     // 将向量转换为PostgreSQL格式
     const vectorString = `[${vector.join(',')}]`;
@@ -100,10 +101,10 @@ export async function syncAndEmbedGame(appId: number): Promise<void> {
             last_updated = NOW()
     `;
     
-    console.log(`游戏 ${appId} 数据已成功存入数据库`);
+    log.info('游戏数据存入数据库成功', { appId, gameName: details.name });
 
   } catch (error) {
-    console.error(`同步游戏 ${appId} 失败:`, error);
+    log.error('游戏详情同步失败', error, { appId });
     throw error;
   }
 }
@@ -114,15 +115,15 @@ export async function syncUserLibrary(userId: string): Promise<{
   failed: number;
   total: number;
 }> {
-  console.log(`开始为用户 ${userId} 同步游戏库...`);
+  log.info('开始同步用户游戏库', { userId });
   
   try {
     // 获取用户所有游戏
     const { games } = await getUserGames(userId, 5000, 0);
-    console.log(`为用户 ${userId} 找到 ${games.length} 个游戏`);
+    log.info('获取用户游戏列表', { userId, totalGames: games.length });
 
     if (games.length === 0) {
-      console.log('用户游戏库为空，无需同步');
+      log.warn('用户游戏库为空', { userId });
       return { success: 0, failed: 0, total: 0 };
     }
 
@@ -134,7 +135,9 @@ export async function syncUserLibrary(userId: string): Promise<{
     
     for (let i = 0; i < games.length; i += batchSize) {
       const batch = games.slice(i, i + batchSize);
-      console.log(`处理批次 ${Math.floor(i/batchSize) + 1}/${Math.ceil(games.length/batchSize)}`);
+      const currentBatch = Math.floor(i/batchSize) + 1;
+      const totalBatches = Math.ceil(games.length/batchSize);
+      log.debug('处理游戏同步批次', { currentBatch, totalBatches, batchSize: batch.length });
       
       // 并行处理当前批次
       const batchPromises = batch.map(async (game) => {
@@ -143,7 +146,7 @@ export async function syncUserLibrary(userId: string): Promise<{
           successCount++;
           return { appId: game.appId, success: true };
         } catch (error) {
-          console.error(`游戏 ${game.appId} 同步失败:`, error);
+          log.warn('游戏同步失败', { appId: game.appId, gameName: game.name, error: error instanceof Error ? error.message : String(error) });
           failedCount++;
           return { appId: game.appId, success: false, error };
         }
@@ -153,21 +156,23 @@ export async function syncUserLibrary(userId: string): Promise<{
       
       // 批次间延迟，避免触发速率限制
       if (i + batchSize < games.length) {
-        console.log('等待2秒避免API限制...');
+        log.debug('等待避免API限制', { delayMs: 2000 });
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
     }
     
-    console.log(`用户 ${userId} 游戏库同步完成: ${successCount} 成功, ${failedCount} 失败`);
-    
-    return {
+    const result = {
       success: successCount,
       failed: failedCount,
       total: games.length
     };
+    
+    log.info('用户游戏库同步完成', { userId, ...result });
+    
+    return result;
 
   } catch (error) {
-    console.error(`用户 ${userId} 游戏库同步过程出错:`, error);
+    log.error('用户游戏库同步过程出错', error, { userId });
     throw error;
   }
 }
@@ -180,7 +185,7 @@ export async function isGameSynced(appId: number): Promise<boolean> {
     `;
     return rows.length > 0;
   } catch (error) {
-    console.error(`检查游戏 ${appId} 同步状态失败:`, error);
+    log.error('检查游戏同步状态失败', error, { appId });
     return false;
   }
 }
@@ -193,7 +198,7 @@ export async function getSyncedGamesCount(): Promise<number> {
     `;
     return parseInt(rows[0].count) || 0;
   } catch (error) {
-    console.error('获取已同步游戏数量失败:', error);
+    log.error('获取已同步游戏数量失败', error);
     return 0;
   }
 }
@@ -204,9 +209,9 @@ export async function deleteGameDetails(appId: number): Promise<void> {
     await sql`
       DELETE FROM game_details WHERE app_id = ${appId}
     `;
-    console.log(`已删除游戏 ${appId} 的详情数据`);
+    log.info('已删除游戏详情数据', { appId });
   } catch (error) {
-    console.error(`删除游戏 ${appId} 详情数据失败:`, error);
+    log.error('删除游戏详情数据失败', error, { appId });
     throw error;
   }
 }
